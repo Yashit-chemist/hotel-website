@@ -1,27 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vermas & Tyagis Hotels</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <button id="hotelPrev" onclick="prevHotel()">❮</button>
-    <button id="hotelNext" onclick="nextHotel()">❯</button>
+    <button id="hotelPrev" onclick="prevHotel()" aria-label="Previous Hotel">❮</button>
+    <button id="hotelNext" onclick="nextHotel()" aria-label="Next Hotel">❯</button>
 
     <div class="container">
 
-        <h1 id="hotelName"></h1>
+        <h1 id="hotelName">Loading Hotel...</h1>
 
-        <div class="gallery">
-            <button class="imageArrow" onclick="prevImage()">❮</button>
-            <img id="hotelImage" alt="Hotel Gallery Image">
-            <button class="imageArrow" onclick="nextImage()">❯</button>
+        <div id="imageGalleryWrapper">
+            <div class="gallery">
+                <button class="imageArrow" onclick="prevImage()" aria-label="Previous Gallery Image">❮</button>
+                <img id="hotelImage" alt="Hotel Gallery Presentation">
+                <button class="imageArrow" onclick="nextImage()" aria-label="Next Gallery Image">❯</button>
+            </div>
+            <div id="imageCounter">0 / 0</div>
         </div>
-        <div id="imageCounter"></div>
 
         <div id="commentsSection">
             <h2>Comments</h2>
@@ -30,12 +33,15 @@
 
         <div id="pdfSection">
             <h2>Documents</h2>
-            <div id="pdfContainer" class="gallery">
-                <button class="imageArrow" onclick="prevPdfImage()">❮</button>
-                <img id="pdfImage" alt="Document View" loading="lazy">
-                <button class="imageArrow" onclick="nextPdfImage()">❯</button>
+            <div id="pdfGalleryWrapper">
+                <div id="pdfContainer" class="gallery">
+                    <button class="imageArrow" onclick="prevPdfImage()" aria-label="Previous Document Page">❮</button>
+                    <img id="pdfImage" alt="Document Sheet Presentation View" loading="lazy">
+                    <button class="imageArrow" onclick="nextPdfImage()" aria-label="Next Document Page">❯</button>
+                </div>
+                <div id="pdfImageCounter">0 / 0</div>
             </div>
-            <div id="pdfImageCounter"></div> </div>
+        </div>
 
         <div id="locationSection">
             <h2>Location</h2>

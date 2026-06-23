@@ -27,30 +27,76 @@ function showHotel(index) {
 }
 
 // --- MAIN IMAGE SECTION ---
+// --- MAIN IMAGE SECTION ---
 function loadImage() {
     const hotel = hotels[currentHotel];
     const imgElement = document.getElementById("hotelImage");
     const counterElement = document.getElementById("imageCounter");
+    const galleryWrapper = document.getElementById("imageGalleryWrapper");
 
-    if (!imgElement) return; // Prevent crashes if elements are not found
+    if (!galleryWrapper) return;
 
-    if (hotel.images && hotel.images.length > 0) {
+    // If there are no images, hide the entire image gallery section (including arrows)
+    if (!hotel.images || hotel.images.length === 0) {
+        galleryWrapper.style.display = "none";
+        return;
+    }
+
+    // Otherwise, make sure it's visible and update assets
+    galleryWrapper.style.display = "block";
+
+    if (imgElement) {
         imgElement.src = hotel.images[currentImage];
-        if (counterElement) {
-            counterElement.innerText = (currentImage + 1) + " / " + hotel.images.length;
-        }
+    }
+    
+    if (counterElement) {
+        counterElement.innerText = (currentImage + 1) + " / " + hotel.images.length;
+    }
 
-        // Smart Preloading for Next Main Image
-        const nextImgIndex = (currentImage + 1) % hotel.images.length;
-        if (hotel.images[nextImgIndex]) {
-            const imgCache = new Image();
-            imgCache.src = hotel.images[nextImgIndex];
-        }
-    } else {
-        imgElement.src = "";
-        if (counterElement) counterElement.innerText = "0 / 0";
+    // Smart Preloading for Next Main Image
+    const nextImgIndex = (currentImage + 1) % hotel.images.length;
+    if (hotel.images[nextImgIndex]) {
+        const imgCache = new Image();
+        imgCache.src = hotel.images[nextImgIndex];
     }
 }
+
+
+// --- PDF REPLACEMENT (IMAGES) SECTION ---
+function loadPdfImages() {
+    const hotel = hotels[currentHotel];
+    const pdfImgElement = document.getElementById("pdfImage");
+    const counterElement = document.getElementById("pdfImageCounter");
+    const pdfWrapper = document.getElementById("pdfGalleryWrapper");
+
+    if (!pdfWrapper) return;
+
+    // If there are no document images, hide the entire document section (including arrows)
+    if (!hotel.pdf_images || hotel.pdf_images.length === 0) {
+        pdfWrapper.style.display = "none";
+        return;
+    }
+
+    // Otherwise, reveal it and set up properties
+    pdfWrapper.style.display = "block";
+
+    if (pdfImgElement) {
+        pdfImgElement.src = hotel.pdf_images[currentPdfImage];
+    }
+    
+    if (counterElement) {
+        counterElement.innerText = (currentPdfImage + 1) + " / " + hotel.pdf_images.length;
+    }
+
+    // Smart Preloading for Next PDF Image
+    const nextPdfImgIndex = (currentPdfImage + 1) % hotel.pdf_images.length;
+    if (hotel.pdf_images[nextPdfImgIndex]) {
+        const pdfCache = new Image();
+        pdfCache.src = hotel.pdf_images[nextPdfImgIndex];
+    }
+}
+
+
 
 function nextImage() {
     const hotel = hotels[currentHotel];
@@ -68,37 +114,7 @@ function prevImage() {
 
 
 // --- PDF REPLACEMENT (IMAGES) SECTION ---
-function loadPdfImages() {
-    const hotel = hotels[currentHotel];
-    const pdfImgElement = document.getElementById("pdfImage");
-    const counterElement = document.getElementById("pdfImageCounter");
 
-    // CRITICAL GUARD: Stop execution safely if the HTML element does not exist yet
-    if (!pdfImgElement) {
-        console.warn("Element '#pdfImage' not found in HTML layout. Skipping document load.");
-        return;
-    }
-
-    // Check if the pdf_images array exists and has contents
-    if (hotel.pdf_images && hotel.pdf_images.length > 0) {
-        pdfImgElement.src = hotel.pdf_images[currentPdfImage];
-        
-        if (counterElement) {
-            counterElement.innerText = (currentPdfImage + 1) + " / " + hotel.pdf_images.length;
-        }
-
-        // Smart Preloading for Next PDF Image
-        const nextPdfImgIndex = (currentPdfImage + 1) % hotel.pdf_images.length;
-        if (hotel.pdf_images[nextPdfImgIndex]) {
-            const pdfCache = new Image();
-            pdfCache.src = hotel.pdf_images[nextPdfImgIndex];
-        }
-    } else {
-        // Fallback or empty if no document images exist
-        pdfImgElement.src = ""; 
-        if (counterElement) counterElement.innerText = "0 / 0";
-    }
-}
 
 function nextPdfImage() {
     const hotel = hotels[currentHotel];
