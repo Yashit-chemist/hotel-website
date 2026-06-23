@@ -1,129 +1,82 @@
 let hotels = [];
-
 let currentHotel = 0;
 let currentImage = 0;
 
-
-let currentHotel = 0;
-let currentImage = 0;
-
-function showHotel(index){
-
+function showHotel(index) {
     currentImage = 0;
-
     const hotel = hotels[index];
 
-    document.getElementById("hotelName").textContent =
-        hotel.name;
-
-    document.getElementById("comments").innerText =
-        hotel.comments;
-
-    document.getElementById("hotelMap").src =
-        hotel.location;
+    document.getElementById("hotelName").textContent = hotel.name;
+    document.getElementById("comments").innerText = hotel.comments;
+    document.getElementById("hotelMap").src = hotel.location;
 
     loadImage();
-
     loadPDFs();
 }
 
-function loadImage(){
-
+function loadImage() {
     const hotel = hotels[currentHotel];
 
-    document.getElementById("hotelImage").src =
-        hotel.images[currentImage];
-
-    document.getElementById("imageCounter").innerText =
-        (currentImage + 1)
-        + " / "
-        + hotel.images.length;
+    document.getElementById("hotelImage").src = hotel.images[currentImage];
+    document.getElementById("imageCounter").innerText = 
+        (currentImage + 1) + " / " + hotel.images.length;
 }
 
-function nextImage(){
-
+function nextImage() {
     const hotel = hotels[currentHotel];
-
     currentImage++;
 
-    if(currentImage >= hotel.images.length)
-        currentImage = 0;
-
+    if (currentImage >= hotel.images.length) currentImage = 0;
     loadImage();
 }
 
-function prevImage(){
-
+function prevImage() {
     const hotel = hotels[currentHotel];
-
     currentImage--;
 
-    if(currentImage < 0)
-        currentImage = hotel.images.length - 1;
-
+    if (currentImage < 0) currentImage = hotel.images.length - 1;
     loadImage();
 }
 
-function nextHotel(){
-
+function nextHotel() {
     currentHotel++;
 
-    if(currentHotel >= hotels.length)
-        currentHotel = 0;
-
+    if (currentHotel >= hotels.length) currentHotel = 0;
     showHotel(currentHotel);
 }
 
-function prevHotel(){
-
+function prevHotel() {
     currentHotel--;
 
-    if(currentHotel < 0)
-        currentHotel = hotels.length - 1;
-
+    if (currentHotel < 0) currentHotel = hotels.length - 1;
     showHotel(currentHotel);
 }
 
-function loadPDFs(){
-
+function loadPDFs() {
     const hotel = hotels[currentHotel];
-
-    const container =
-        document.getElementById("pdfContainer");
+    const container = document.getElementById("pdfContainer");
 
     container.innerHTML = "";
-
     hotel.pdfs.forEach(pdf => {
-
         container.innerHTML += `
             <iframe
                 class="pdfViewer"
                 src="${pdf}">
             </iframe>
         `;
-
     });
 }
 
-
 fetch("hotels.json")
-.then(response => response.json())
-.then(data => {
+    .then(response => response.json())
+    .then(data => {
+        hotels = data;
 
-    hotels = data;
-
-    if(hotels.length > 0){
-        showHotel(0);
-    }
-
-})
-.catch(error => {
-
-    console.error(
-        "Failed to load hotels.json",
-        error
-    );
-
-});
-
+        if (hotels.length > 0) {
+            showHotel(0);
+        }
+    })
+    .catch(error => {
+        console.error("Failed to load hotels.json", error);
+    });
 
