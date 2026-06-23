@@ -9,56 +9,140 @@
 </head>
 
 <body>
+    <button id="openEditorBtn" class="fab" aria-label="Add resort">+</button>
 
-    <button id="hotelPrev" onclick="prevHotel()" aria-label="Previous Hotel">❮</button>
-    <button id="hotelNext" onclick="nextHotel()" aria-label="Next Hotel">❯</button>
-
-    <div class="container">
-
-        <h1 id="hotelName">Loading Hotel...</h1>
-
-        <div id="imageGalleryWrapper">
-            <div class="gallery">
-                <button class="imageArrow" onclick="prevImage()" aria-label="Previous Gallery Image">❮</button>
-                <img id="hotelImage" alt="Hotel Gallery Presentation">
-                <button class="imageArrow" onclick="nextImage()" aria-label="Next Gallery Image">❯</button>
+    <div id="editorModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="editorTitle">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="editorTitle">Edit hotel details</h3>
+                <button id="closeEditorBtn" class="icon-button" type="button" aria-label="Close editor">✕</button>
             </div>
-            <div id="imageCounter">0 / 0</div>
-        </div>
 
-        <div id="commentsSection">
-            <h2>Comments</h2>
-            <div id="comments"></div>
-        </div>
+            <form id="hotelEditorForm">
+                <label class="field">
+                    <span>Hotel name</span>
+                    <input id="editorName" name="name" type="text" required>
+                </label>
 
-        <div id="pdfSection">
-            <h2>Documents</h2>
-            <div id="pdfGalleryWrapper">
-                <div id="pdfContainer" class="gallery">
-                    <button class="imageArrow" onclick="prevPdfImage()" aria-label="Previous Document Page">❮</button>
-                    <img id="pdfImage" alt="Document Sheet Presentation View" loading="lazy">
-                    <button class="imageArrow" onclick="nextPdfImage()" aria-label="Next Document Page">❯</button>
+                <label class="field">
+                    <span>Comments / story</span>
+                    <textarea id="editorComments" name="comments" rows="5"></textarea>
+                </label>
+
+                <label class="field">
+                    <span>Location URL</span>
+                    <input id="editorLocation" name="location" type="url">
+                </label>
+
+                <label class="field">
+                    <span>Google Drive sync URL</span>
+                    <input id="driveSyncUrl" name="driveSyncUrl" type="url" placeholder="https://script.google.com/macros/s/.../exec">
+                    <small class="helper-text">Optional. This saves to one fixed file named hotel-website-data.json in your chosen Google Drive folder.</small>
+                </label>
+
+                <label class="field">
+                    <span>Gallery photos</span>
+                    <input id="editorImages" name="images" type="file" accept="image/*" multiple>
+                    <small class="helper-text">Select multiple photos to upload for the gallery.</small>
+                </label>
+
+                <label class="field">
+                    <span>Document pages</span>
+                    <input id="editorPdfImages" name="pdf_images" type="file" accept="image/*" multiple>
+                    <small class="helper-text">Select multiple images to upload as document pages.</small>
+                </label>
+
+                <div class="form-actions">
+                    <button id="cancelEditorBtn" class="secondary-btn" type="button">Cancel</button>
+                    <button class="primary-btn" type="submit">Save details</button>
                 </div>
-                <div id="pdfImageCounter">0 / 0</div>
+            </form>
+        </div>
+    </div>
+
+    <div class="page-shell">
+        <header class="hero">
+            <div class="hero-copy">
+                <p class="eyebrow">Curated stays & experiences</p>
+                <h1 id="hotelName">Loading Hotel...</h1>
+                <p id="hotelSubtitle" class="hero-subtitle">Loading experience details...</p>
+                <div class="hero-actions">
+                    <button id="hotelPrev" class="nav-pill" onclick="prevHotel()" aria-label="Previous Hotel">← Previous</button>
+                    <button id="hotelNext" class="nav-pill nav-pill-primary" onclick="nextHotel()" aria-label="Next Hotel">Next →</button>
+                </div>
             </div>
-        </div>
 
-        <div id="locationSection">
-            <h2>Location</h2>
-            <iframe
-                id="hotelMap"
-                width="100%"
-                height="500"
-                style="border:0;"
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade">
-            </iframe>
-        </div>
+            <div class="hero-panel">
+                <div id="hotelTabs" class="hotel-tabs" aria-label="Hotel selector"></div>
+                <div class="info-badge">
+                    <span class="badge-label">Now viewing</span>
+                    <div id="hotelStatus" class="badge-value">Loading selection...</div>
+                </div>
+            </div>
+        </header>
 
+        <main class="container">
+            <section class="card spotlight-card">
+                <div class="section-heading">
+                    <div>
+                        <p class="section-kicker">Gallery</p>
+                        <h2>Visual highlights</h2>
+                    </div>
+                </div>
+                <div id="imageGalleryWrapper" class="gallery-shell">
+                    <button class="imageArrow" onclick="prevImage()" aria-label="Previous Gallery Image">❮</button>
+                    <img id="hotelImage" alt="Hotel Gallery Presentation">
+                    <button class="imageArrow" onclick="nextImage()" aria-label="Next Gallery Image">❯</button>
+                </div>
+                <div id="imageCounter" class="counter">0 / 0</div>
+            </section>
+
+            <div class="content-grid">
+                <section class="card info-card">
+                    <div class="section-heading">
+                        <div>
+                            <p class="section-kicker">Story</p>
+                            <h2>Comments</h2>
+                        </div>
+                    </div>
+                    <div id="comments" class="comment-content"></div>
+                </section>
+
+                <section class="card documents-card">
+                    <div class="section-heading">
+                        <div>
+                            <p class="section-kicker">Documents</p>
+                            <h2>Quotation pages</h2>
+                        </div>
+                    </div>
+                    <div id="pdfGalleryWrapper" class="gallery-shell">
+                        <button class="imageArrow" onclick="prevPdfImage()" aria-label="Previous Document Page">❮</button>
+                        <img id="pdfImage" alt="Document Sheet Presentation View" loading="lazy">
+                        <button class="imageArrow" onclick="nextPdfImage()" aria-label="Next Document Page">❯</button>
+                    </div>
+                    <div id="pdfImageCounter" class="counter">0 / 0</div>
+                </section>
+            </div>
+
+            <section class="card map-card">
+                <div class="section-heading">
+                    <div>
+                        <p class="section-kicker">Location</p>
+                        <h2>Find the property</h2>
+                    </div>
+                </div>
+                <iframe
+                    id="hotelMap"
+                    width="100%"
+                    height="500"
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </section>
+        </main>
     </div>
 
     <script src="script.js"></script>
-
 </body>
 
 </html>
