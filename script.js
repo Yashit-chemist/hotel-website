@@ -10,9 +10,17 @@ function showHotel(index) {
     currentPdfImage = 0; // Reset document image index for the new hotel
     const hotel = hotels[index];
 
-    document.getElementById("hotelName").textContent = hotel.name;
-    document.getElementById("comments").innerText = hotel.comments;
-    document.getElementById("hotelMap").src = hotel.location;
+    // Safely apply text content
+    const nameEl = document.getElementById("hotelName");
+    const commentsEl = document.getElementById("comments");
+    if (nameEl) nameEl.textContent = hotel.name;
+    if (commentsEl) commentsEl.innerText = hotel.comments;
+
+    // SAFE MAP BINDING: Assigns the clean string URL directly to your iframe src
+    const mapEl = document.getElementById("hotelMap");
+    if (mapEl && hotel.location) {
+        mapEl.src = hotel.location;
+    }
 
     loadImage();
     loadPdfImages(); // Load the new image-based doc carousel
@@ -22,11 +30,15 @@ function showHotel(index) {
 function loadImage() {
     const hotel = hotels[currentHotel];
     const imgElement = document.getElementById("hotelImage");
+    const counterElement = document.getElementById("imageCounter");
+
+    if (!imgElement) return; // Prevent crashes if elements are not found
 
     if (hotel.images && hotel.images.length > 0) {
         imgElement.src = hotel.images[currentImage];
-        document.getElementById("imageCounter").innerText = 
-            (currentImage + 1) + " / " + hotel.images.length;
+        if (counterElement) {
+            counterElement.innerText = (currentImage + 1) + " / " + hotel.images.length;
+        }
 
         // Smart Preloading for Next Main Image
         const nextImgIndex = (currentImage + 1) % hotel.images.length;
@@ -36,7 +48,7 @@ function loadImage() {
         }
     } else {
         imgElement.src = "";
-        document.getElementById("imageCounter").innerText = "0 / 0";
+        if (counterElement) counterElement.innerText = "0 / 0";
     }
 }
 
@@ -61,6 +73,12 @@ function loadPdfImages() {
     const pdfImgElement = document.getElementById("pdfImage");
     const counterElement = document.getElementById("pdfImageCounter");
 
+    // CRITICAL GUARD: Stop execution safely if the HTML element does not exist yet
+    if (!pdfImgElement) {
+        console.warn("Element '#pdfImage' not found in HTML layout. Skipping document load.");
+        return;
+    }
+
     // Check if the pdf_images array exists and has contents
     if (hotel.pdf_images && hotel.pdf_images.length > 0) {
         pdfImgElement.src = hotel.pdf_images[currentPdfImage];
@@ -76,8 +94,8 @@ function loadPdfImages() {
             pdfCache.src = hotel.pdf_images[nextPdfImgIndex];
         }
     } else {
-        // Fallback fallback if no document images exist
-        pdfImgElement.src = "path/to/placeholder-or-blank.png"; 
+        // Fallback or empty if no document images exist
+        pdfImgElement.src = ""; 
         if (counterElement) counterElement.innerText = "0 / 0";
     }
 }
