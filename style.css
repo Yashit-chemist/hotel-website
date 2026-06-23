@@ -1,5 +1,59 @@
 body{
-    font-family: Arial;
+    margin:0;
+    background:#f4f4f4;
+    font-family:Arial, sans-serif;
+}
+
+.container{
+    width:80%;
+    margin:auto;
     text-align:center;
-    margin:40px;
+    padding:20px;
+}
+
+#hotelImage{
+    width:100%;
+    max-height:600px;
+    object-fit:cover;
+    border-radius:15px;
+}
+
+#price{
+    font-size:40px;
+    font-weight:bold;
+    margin:20px;
+}
+
+#description{
+    font-size:22px;
+    line-height:1.6;
+}
+
+#comments{
+    font-size:20px;
+    margin-bottom:30px;
+}
+
+#leftArrow,
+#rightArrow{
+    position:fixed;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:80px;
+    border:none;
+    background:none;
+    cursor:pointer;
+    z-index:1000;
+}
+
+#leftArrow{
+    left:20px;
+}
+
+#rightArrow{
+    right:20px;
+}
+
+iframe{
+    border-radius:15px;
 }
