@@ -4,71 +4,49 @@
 <head>
     <meta charset="UTF-8">
     <title>Vermas & Tyagis Hotels</title>
-
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- Hotel Navigation -->
-
-    <button id="hotelPrev" onclick="prevHotel()">
-        ❮
-    </button>
-
-    <button id="hotelNext" onclick="nextHotel()">
-        ❯
-    </button>
+    <button id="hotelPrev" onclick="prevHotel()">❮</button>
+    <button id="hotelNext" onclick="nextHotel()">❯</button>
 
     <div class="container">
 
         <h1 id="hotelName"></h1>
 
-        <!-- IMAGE GALLERY -->
-
         <div class="gallery">
-
-            <button class="imageArrow" onclick="prevImage()">
-                ❮
-            </button>
-
-            <img id="hotelImage">
-
-            <button class="imageArrow" onclick="nextImage()">
-                ❯
-            </button>
-
+            <button class="imageArrow" onclick="prevImage()">❮</button>
+            <img id="hotelImage" alt="Hotel Gallery Image">
+            <button class="imageArrow" onclick="nextImage()">❯</button>
         </div>
-
         <div id="imageCounter"></div>
 
         <div id="commentsSection">
-
             <h2>Comments</h2>
-
             <div id="comments"></div>
-
         </div>
 
         <div id="pdfSection">
-
             <h2>Documents</h2>
-
-            <div id="pdfContainer"></div>
-
-        </div>
+            <div id="pdfContainer" class="gallery">
+                <button class="imageArrow" onclick="prevPdfImage()">❮</button>
+                <img id="pdfImage" alt="Document View" loading="lazy">
+                <button class="imageArrow" onclick="nextPdfImage()">❯</button>
+            </div>
+            <div id="pdfImageCounter"></div> </div>
 
         <div id="locationSection">
-
             <h2>Location</h2>
-
             <iframe
                 id="hotelMap"
                 width="100%"
                 height="500"
-                loading="lazy">
+                style="border:0;"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
             </iframe>
-
         </div>
 
     </div>
@@ -78,5 +56,3 @@
 </body>
 
 </html>
-
-

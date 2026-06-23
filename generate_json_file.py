@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-
 import os
 import json
+import re
 
 HOTELS_DIR = "Hotels"
 
@@ -16,106 +16,75 @@ IMAGE_EXTENSIONS = {
     ".tiff"
 }
 
-PDF_EXTENSIONS = {
-    ".pdf"
-}
-
 hotels = []
 
-for hotel_name in sorted(os.listdir(HOTELS_DIR)):
+# Ensure the main directory exists before running
+if not os.path.exists(HOTELS_DIR):
+    print(f"Error: Directory '{HOTELS_DIR}' not found.")
+    exit()
 
-    hotel_path = os.path.join(
-        HOTELS_DIR,
-        hotel_name
-    )
+for hotel_name in sorted(os.listdir(HOTELS_DIR)):
+    hotel_path = os.path.join(HOTELS_DIR, hotel_name)
 
     if not os.path.isdir(hotel_path):
         continue
 
     hotel = {}
-
     hotel["name"] = hotel_name
 
     images = []
-    pdfs = []
+    pdf_images = []
 
+    # 1. Grab normal hotel images from the hotel's root folder
     for fname in sorted(os.listdir(hotel_path)):
-
         ext = os.path.splitext(fname)[1].lower()
-
-        relpath = os.path.join(
-            "Hotels",
-            hotel_name,
-            fname
-        ).replace("\\", "/")
-
         if ext in IMAGE_EXTENSIONS:
+            relpath = os.path.join("Hotels", hotel_name, fname).replace("\\", "/")
             images.append(relpath)
 
-        elif ext in PDF_EXTENSIONS:
-            pdfs.append(relpath)
+    # 2. Look for the "PDF_image" subfolder to gather document images
+    pdf_image_dir = os.path.join(hotel_path, "PDF_image")
+    if os.path.exists(pdf_image_dir) and os.path.isdir(pdf_image_dir):
+        for fname in sorted(os.listdir(pdf_image_dir)):
+            ext = os.path.splitext(fname)[1].lower()
+            if ext in IMAGE_EXTENSIONS:
+                relpath = os.path.join("Hotels", hotel_name, "PDF_image", fname).replace("\\", "/")
+                pdf_images.append(relpath)
 
     hotel["images"] = images
-    hotel["pdfs"] = pdfs
+    hotel["pdf_images"] = pdf_images  # Updated key name to match JS
 
-    comments_file = os.path.join(
-        hotel_path,
-        "comments.txt"
-    )
-
+    # 3. Read Comments
+    comments_file = os.path.join(hotel_path, "comments.txt")
     if os.path.exists(comments_file):
-
-        with open(
-            comments_file,
-            "r",
-            encoding="utf-8"
-        ) as f:
-
+        with open(comments_file, "r", encoding="utf-8") as f:
             hotel["comments"] = f.read()
-
     else:
-
         hotel["comments"] = ""
 
-    location_file = os.path.join(
-        hotel_path,
-        "location.l"
-    )
-
+    # 4. Read Location and Extract clean Embed URL automatically
+    location_file = os.path.join(hotel_path, "location.l")
     if os.path.exists(location_file):
-
-        with open(
-            location_file,
-            "r",
-            encoding="utf-8"
-        ) as f:
-
-            hotel["location"] = f.read().strip()
-
+        with open(location_file, "r", encoding="utf-8") as f:
+            raw_location = f.read().strip()
+        
+        # Regex to automatically find src="URL" inside the iframe code
+        match = re.search(r'src=["\'](https?://[^"\']+)["\']', raw_location)
+        if match:
+            hotel["location"] = match.group(1)  # Saves only the clean URL link!
+        else:
+            # If it's already a clean link or fallback
+            hotel["location"] = raw_location
     else:
-
         hotel["location"] = ""
 
     hotels.append(hotel)
 
-with open(
-    "hotels.json",
-    "w",
-    encoding="utf-8"
-) as f:
+# Write out clean database configuration
+with open("hotels.json", "w", encoding="utf-8") as f:
+    json.dump(hotels, f, indent=4, ensure_ascii=False)
 
-    json.dump(
-        hotels,
-        f,
-        indent=4,
-        ensure_ascii=False
-    )
-
-print(
-    f"Generated hotels.json with "
-    f"{len(hotels)} hotels"
-    )
-
+print(f"Generated hotels.json with {len(hotels)} hotels successfully.")
 import os
 from pdf2image import convert_from_path
 
