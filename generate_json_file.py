@@ -114,4 +114,58 @@ with open(
 print(
     f"Generated hotels.json with "
     f"{len(hotels)} hotels"
-)
+    )
+
+import os
+from pdf2image import convert_from_path
+
+HOTELS_DIR = "Hotels"
+
+OUTPUT_FOLDER_NAME = "PDF_image"
+
+def convert_pdf(pdf_path, output_dir, pdf_name):
+
+    images = convert_from_path(pdf_path, dpi=200)
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    for i, img in enumerate(images):
+
+        img_path = os.path.join(
+            output_dir,
+            f"{pdf_name}_page_{i+1}.png"
+        )
+
+        img.save(img_path, "PNG")
+
+        print(f"Saved: {img_path}")
+
+
+for hotel in os.listdir(HOTELS_DIR):
+
+    hotel_path = os.path.join(HOTELS_DIR, hotel)
+
+    if not os.path.isdir(hotel_path):
+        continue
+
+    output_dir = os.path.join(
+        hotel_path,
+        OUTPUT_FOLDER_NAME
+    )
+
+    for file in os.listdir(hotel_path):
+
+        if file.lower().endswith(".pdf"):
+
+            pdf_path = os.path.join(hotel_path, file)
+
+            pdf_name = os.path.splitext(file)[0]
+
+            print(f"\nConverting: {pdf_path}")
+
+            convert_pdf(pdf_path, output_dir, pdf_name)
+
+print("\nDONE: All PDFs converted into PDF_image folders.")
+
+
+
