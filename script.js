@@ -1,116 +1,67 @@
-const hotels = [
-
-{
-    name: "Grand Riverside Hotel",
-    image: "images/hotel1.jpg",
-    price: "£120 per night",
-
-    description:
-    "Luxury hotel located beside the river with spacious rooms and beautiful views.",
-
-    comments: [
-        "★★★★★ Fantastic stay",
-        "★★★★★ Great breakfast",
-        "★★★★☆ Friendly staff"
-    ],
-
-    map:
-    "https://maps.google.com/maps?q=glasgow&t=&z=13&ie=UTF8&iwloc=&output=embed"
-},
-
-{
-    name: "Mountain Retreat",
-    image: "images/hotel2.jpg",
-    price: "£140 per night",
-
-    description:
-    "Quiet mountain retreat ideal for nature lovers.",
-
-    comments: [
-        "★★★★★ Amazing scenery",
-        "★★★★☆ Very peaceful"
-    ],
-
-    map:
-    "https://maps.google.com/maps?q=edinburgh&t=&z=13&ie=UTF8&iwloc=&output=embed"
-},
-
-{
-    name: "Beach Resort",
-    image: "images/hotel3.jpg",
-    price: "£200 per night",
-
-    description:
-    "Modern beachfront resort with stunning ocean views.",
-
-    comments: [
-        "★★★★★ Loved the beach",
-        "★★★★★ Pool was fantastic"
-    ],
-
-    map:
-    "https://maps.google.com/maps?q=brighton&t=&z=13&ie=UTF8&iwloc=&output=embed"
-},
-
-{
-    name: "City Centre Suites",
-    image: "images/hotel4.jpg",
-    price: "£95 per night",
-
-    description:
-    "Convenient location in the city centre.",
-
-    comments: [
-        "★★★★☆ Great location",
-        "★★★★☆ Clean rooms"
-    ],
-
-    map:
-    "https://maps.google.com/maps?q=london&t=&z=13&ie=UTF8&iwloc=&output=embed"
-},
-
-{
-    name: "Royal Palace Hotel",
-    image: "images/hotel5.jpg",
-    price: "£300 per night",
-
-    description:
-    "Five-star luxury experience with premium services.",
-
-    comments: [
-        "★★★★★ Outstanding",
-        "★★★★★ Worth every penny"
-    ],
-
-    map:
-    "https://maps.google.com/maps?q=manchester&t=&z=13&ie=UTF8&iwloc=&output=embed"
-}
-
-];
+let hotels = [];
 
 let currentHotel = 0;
+let currentImage = 0;
+
+
+let currentHotel = 0;
+let currentImage = 0;
 
 function showHotel(index){
 
+    currentImage = 0;
+
+    const hotel = hotels[index];
+
     document.getElementById("hotelName").textContent =
-        hotels[index].name;
+        hotel.name;
 
-    document.getElementById("hotelImage").src =
-        hotels[index].image;
-
-    document.getElementById("price").textContent =
-        hotels[index].price;
-
-    document.getElementById("description").textContent =
-        hotels[index].description;
-
-    document.getElementById("comments").innerHTML =
-        hotels[index].comments
-        .map(x => `<p>${x}</p>`)
-        .join("");
+    document.getElementById("comments").innerText =
+        hotel.comments;
 
     document.getElementById("hotelMap").src =
-        hotels[index].map;
+        hotel.location;
+
+    loadImage();
+
+    loadPDFs();
+}
+
+function loadImage(){
+
+    const hotel = hotels[currentHotel];
+
+    document.getElementById("hotelImage").src =
+        hotel.images[currentImage];
+
+    document.getElementById("imageCounter").innerText =
+        (currentImage + 1)
+        + " / "
+        + hotel.images.length;
+}
+
+function nextImage(){
+
+    const hotel = hotels[currentHotel];
+
+    currentImage++;
+
+    if(currentImage >= hotel.images.length)
+        currentImage = 0;
+
+    loadImage();
+}
+
+function prevImage(){
+
+    const hotel = hotels[currentHotel];
+
+    currentImage--;
+
+    if(currentImage < 0)
+        currentImage = hotel.images.length - 1;
+
+    loadImage();
 }
 
 function nextHotel(){
@@ -133,4 +84,46 @@ function prevHotel(){
     showHotel(currentHotel);
 }
 
-showHotel(0);
+function loadPDFs(){
+
+    const hotel = hotels[currentHotel];
+
+    const container =
+        document.getElementById("pdfContainer");
+
+    container.innerHTML = "";
+
+    hotel.pdfs.forEach(pdf => {
+
+        container.innerHTML += `
+            <iframe
+                class="pdfViewer"
+                src="${pdf}">
+            </iframe>
+        `;
+
+    });
+}
+
+
+fetch("hotels.json")
+.then(response => response.json())
+.then(data => {
+
+    hotels = data;
+
+    if(hotels.length > 0){
+        showHotel(0);
+    }
+
+})
+.catch(error => {
+
+    console.error(
+        "Failed to load hotels.json",
+        error
+    );
+
+});
+
+

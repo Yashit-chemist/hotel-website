@@ -1,41 +1,82 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Hotel Showcase</title>
+    <meta charset="UTF-8">
+    <title>Vermas & Tyagis Hotels</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <button id="leftArrow" onclick="prevHotel()">❮</button>
+    <!-- Hotel Navigation -->
+
+    <button id="hotelPrev" onclick="prevHotel()">
+        ❮
+    </button>
+
+    <button id="hotelNext" onclick="nextHotel()">
+        ❯
+    </button>
 
     <div class="container">
 
         <h1 id="hotelName"></h1>
 
-        <img id="hotelImage">
+        <!-- IMAGE GALLERY -->
 
-        <div id="price"></div>
+        <div class="gallery">
 
-        <p id="description"></p>
+            <button class="imageArrow" onclick="prevImage()">
+                ❮
+            </button>
 
-        <h2>Comments</h2>
+            <img id="hotelImage">
 
-        <div id="comments"></div>
+            <button class="imageArrow" onclick="nextImage()">
+                ❯
+            </button>
 
-        <iframe
-            id="hotelMap"
-            width="100%"
-            height="500"
-            style="border:0"
-            loading="lazy">
-        </iframe>
+        </div>
+
+        <div id="imageCounter"></div>
+
+        <div id="commentsSection">
+
+            <h2>Comments</h2>
+
+            <div id="comments"></div>
+
+        </div>
+
+        <div id="pdfSection">
+
+            <h2>Documents</h2>
+
+            <div id="pdfContainer"></div>
+
+        </div>
+
+        <div id="locationSection">
+
+            <h2>Location</h2>
+
+            <iframe
+                id="hotelMap"
+                width="100%"
+                height="500"
+                loading="lazy">
+            </iframe>
+
+        </div>
 
     </div>
-
-    <button id="rightArrow" onclick="nextHotel()">❯</button>
 
     <script src="script.js"></script>
 
 </body>
+
 </html>
+
+
