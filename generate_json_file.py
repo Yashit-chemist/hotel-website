@@ -1,4 +1,68 @@
 #!/usr/bin/env python3
+
+import os
+from pdf2image import convert_from_path
+
+HOTELS_DIR = "Hotels"
+OUTPUT_FOLDER_NAME = "PDF_image"
+
+def convert_pdf(pdf_path, output_dir, pdf_name):
+    # 1. OPTIMIZATION: Reduced DPI from 200 to 140. 
+    # This keeps text sharp but heavily scales down total pixel size.
+    images = convert_from_path(pdf_path, dpi=140)
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    for i, img in enumerate(images):
+        # 2. OPTIMIZATION: Switched extension to .jpg (or use .webp for even better compression)
+        img_path = os.path.join(
+            output_dir,
+            f"{pdf_name}_page_{i+1}.jpg"
+        )
+
+        # 3. OPTIMIZATION: Saved as JPEG with optimization and 75% quality compression.
+        # This reduces file sizes down to light kilobytes (KBs) instead of Megabytes (MBs).
+        img.save(
+            img_path, 
+            "JPEG", 
+            optimize=True, 
+            quality=75
+        )
+
+        print(f"Saved (Optimized): {img_path}")
+
+
+for hotel in os.listdir(HOTELS_DIR):
+    hotel_path = os.path.join(HOTELS_DIR, hotel)
+
+    if not os.path.isdir(hotel_path):
+        continue
+
+    output_dir = os.path.join(
+        hotel_path,
+        OUTPUT_FOLDER_NAME
+    )
+
+    for file in os.listdir(hotel_path):
+        if file.lower().endswith(".pdf"):
+            pdf_path = os.path.join(hotel_path, file)
+            pdf_name = os.path.splitext(file)[0]
+
+            print(f"\nConverting: {pdf_path}")
+            convert_pdf(pdf_path, output_dir, pdf_name)
+
+print("\nDONE: All PDFs converted into highly compressed PDF_image folders.")
+
+
+
+#############################################################################################################
+#############################################################################################################
+#############################################################################################################
+
+
+
+
+
 import os
 import json
 import re
@@ -85,56 +149,9 @@ with open("hotels.json", "w", encoding="utf-8") as f:
     json.dump(hotels, f, indent=4, ensure_ascii=False)
 
 print(f"Generated hotels.json with {len(hotels)} hotels successfully.")
-import os
-from pdf2image import convert_from_path
-
-HOTELS_DIR = "Hotels"
-
-OUTPUT_FOLDER_NAME = "PDF_image"
-
-def convert_pdf(pdf_path, output_dir, pdf_name):
-
-    images = convert_from_path(pdf_path, dpi=200)
-
-    os.makedirs(output_dir, exist_ok=True)
-
-    for i, img in enumerate(images):
-
-        img_path = os.path.join(
-            output_dir,
-            f"{pdf_name}_page_{i+1}.png"
-        )
-
-        img.save(img_path, "PNG")
-
-        print(f"Saved: {img_path}")
 
 
-for hotel in os.listdir(HOTELS_DIR):
 
-    hotel_path = os.path.join(HOTELS_DIR, hotel)
-
-    if not os.path.isdir(hotel_path):
-        continue
-
-    output_dir = os.path.join(
-        hotel_path,
-        OUTPUT_FOLDER_NAME
-    )
-
-    for file in os.listdir(hotel_path):
-
-        if file.lower().endswith(".pdf"):
-
-            pdf_path = os.path.join(hotel_path, file)
-
-            pdf_name = os.path.splitext(file)[0]
-
-            print(f"\nConverting: {pdf_path}")
-
-            convert_pdf(pdf_path, output_dir, pdf_name)
-
-print("\nDONE: All PDFs converted into PDF_image folders.")
 
 
 
