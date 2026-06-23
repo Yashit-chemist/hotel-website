@@ -135,4 +135,32 @@ iframe{
     margin-bottom:40px;
 
     border-radius:15px;
+
 }
+
+/* --- NEW DOCUMENT IMAGE GALLERY STYLES --- */
+
+/* Give your document image the exact same physical space as your hotel image */
+#pdfImage {
+    width: 85%;
+    max-height: 700px;
+    object-fit: contain; /* 'contain' ensures your full text document page doesn't get cropped */
+    background: #222;    /* Dark background contrast for document styling */
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+/* Ensure the document image counter matches the look of your main counter */
+#pdfImageCounter {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 24px;
+    color: #aaa; /* Slightly softer white to visually distinguish it */
+}
+
+/* Clean up layout spacing between sections */
+#pdfContainer {
+    margin-top: 20px;
+}
+
+
